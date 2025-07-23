@@ -1,0 +1,19 @@
+server:
+  port: 1111
+  servlet:
+    context-path: /spring
+
+spring:
+  datasource:
+    url: "jdbc:mysql://localhost:3306/spring"
+    driverClassName: "com.mysql.cj.jdbc.Driver"
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+jwt:
+  signerKey: "q1FPPcJTgJGYS0sY1bHaoui72AxBZAv8qyxmh5g3QzEwTpABzlwkuVaWB7b0U5Js"
+  valid-duration: 60
+  refresh-duration : 3600
