@@ -6,15 +6,28 @@ spring:
   datasource:
 
     driverClassName: "com.mysql.cj.jdbc.Driver"
-    url: "jdbc:mysql://localhost:3306/identity-service"
+    url: "jdbc:mysql://localhost:3306/libary-service"
     username : root
     password : root
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
-
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: nd1242003@gmail.com
+    password: dpsl uyxt rqhj vgzn
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 jwt:
-  signerKey: "18OJS7qaA+RYLz/VOuV0Mg7WNw9BgJ3Qsi6SwMN6kqC2Mbt2LLv9yV8oPgeNR8YQ"
+  signerKey: "qNgTMRm3ljcHlDua2vu4x/ydt+TrH+9e/YqR7z9vRB/yCkprX/UfQuOVCiIGNFwE"
   valid-duration : 3600 #in second
   refreshable-duration: 36000 #in second
+
+
+

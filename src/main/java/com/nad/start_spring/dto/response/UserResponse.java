@@ -1,15 +1,13 @@
-package com.nad.start_spring.entity;
+package com.nad.start_spring.dto.response;
 
-import com.nad.start_spring.dto.response.RoleResponse;
-import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.Set;
 
 
@@ -22,11 +20,13 @@ public class UserResponse {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
      String id;
-     String username;
-     String firstName;
-     String lastName;
-     LocalDate dob;
-     Set<RoleResponse> roles;
+    String name;
+    String email;
+    String username;
+    String address;
+    Date joinDate;
+
+
 
 
 }

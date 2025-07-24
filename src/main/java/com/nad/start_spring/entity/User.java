@@ -6,6 +6,8 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -18,14 +20,17 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
      String id;
+     String name;
+     String email;
      String username;
      String password;
-     String firstName;
-     String lastName;
-     LocalDate dob;
+     String address;
+     Date joinDate;
 
-     @ManyToMany
-     Set<Role> roles;
+    @OneToMany(mappedBy = "user")
+    List<Loan> loans;
 
+    @OneToMany(mappedBy = "user")
+    List<Reservation> reservations;
 
 }

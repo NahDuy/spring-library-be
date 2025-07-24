@@ -19,6 +19,7 @@ public enum ErrorCode {
     INVALID_JWS_HEADER(1007,"Invalid JWS header",HttpStatus.BAD_REQUEST),
     UNAUTHORIZED(1008, "You do not have permission", HttpStatus.FORBIDDEN),
     INVALID_DOB(1009,"Your age must be at least {min}",HttpStatus.BAD_REQUEST),
+    INVALID_VERIFICATION_CODE(1010,"Invalid verification code",HttpStatus.BAD_REQUEST),
     ;
     private int code;
     private String message;
