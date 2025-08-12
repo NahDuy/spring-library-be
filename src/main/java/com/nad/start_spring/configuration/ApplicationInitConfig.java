@@ -1,7 +1,6 @@
 package com.nad.start_spring.configuration;
 
 import com.nad.start_spring.entity.User;
-import com.nad.start_spring.enums.Role;
 import com.nad.start_spring.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -34,13 +33,10 @@ public class ApplicationInitConfig {
     ApplicationRunner applicationRunner(UserRepository userRepository) {
         return args -> {
             if(userRepository.findByUsername("admin").isEmpty()){
-                var role = new HashSet<String>();
-                role.add(Role.ADMIN.name());
                 User user = User
                         .builder()
                         .username("admin")
                         .password(passwordEncoder.encode("admin"))
-                        //.roles(role)
                         .build();
                 userRepository.save(user);
                 log.warn("admin user has been created with default password: admin, please change it");

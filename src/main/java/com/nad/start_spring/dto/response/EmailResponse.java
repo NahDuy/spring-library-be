@@ -4,13 +4,11 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-
-public class PermissionResponse {
-    String name;
-    String description;
-
+public class EmailResponse {
+    String email;
+    String message;
 }

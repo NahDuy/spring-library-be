@@ -8,9 +8,8 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-
-public class PermissionRequest {
-    String name;
-    String description;
-
+public class ResetPasswordRequest {
+     String email;
+     String code;
+     String newPassword;
 }

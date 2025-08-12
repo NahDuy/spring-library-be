@@ -4,21 +4,20 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
-import java.util.Set;
+import java.util.List;
 
-@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Role {
+@Entity
+public class Category {
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String categoryId;
     String name;
     String description;
-
-    @ManyToMany
-    Set<Permission> permissions;
-
+    @OneToMany(mappedBy = "category")
+    List<Book> books;
 }

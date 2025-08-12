@@ -1,9 +1,9 @@
-package com.nad.start_spring.dto.request;
+package com.nad.start_spring.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.apache.tomcat.util.json.JSONParser;
+
 @Data
 @Builder
 @NoArgsConstructor

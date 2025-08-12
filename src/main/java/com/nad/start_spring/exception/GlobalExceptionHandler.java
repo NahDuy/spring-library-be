@@ -1,6 +1,6 @@
 package com.nad.start_spring.exception;
 
-import com.nad.start_spring.dto.request.ApiResponse;
+import com.nad.start_spring.dto.response.ApiResponse;
 import jakarta.validation.ConstraintViolation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +10,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import javax.swing.text.html.parser.Entity;
 import java.util.Map;
 import java.util.Objects;
 

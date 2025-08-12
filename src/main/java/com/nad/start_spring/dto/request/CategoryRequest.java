@@ -1,21 +1,14 @@
-package com.nad.start_spring.entity;
+package com.nad.start_spring.dto.request;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Permission {
-    @Id
+public class CategoryRequest {
     String name;
     String description;
-
-
 }

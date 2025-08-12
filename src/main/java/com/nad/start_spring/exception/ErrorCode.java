@@ -19,7 +19,14 @@ public enum ErrorCode {
     INVALID_JWS_HEADER(1007,"Invalid JWS header",HttpStatus.BAD_REQUEST),
     UNAUTHORIZED(1008, "You do not have permission", HttpStatus.FORBIDDEN),
     INVALID_DOB(1009,"Your age must be at least {min}",HttpStatus.BAD_REQUEST),
-    ;
+    INVALID_VERIFICATION_CODE(1010,"Invalid verification code",HttpStatus.BAD_REQUEST),
+    CATEGORY_EXISTED(1011,"Category exists",HttpStatus.BAD_REQUEST),
+    CATEGORY_NOT_EXISTED(1012,"Category not exists",HttpStatus.BAD_REQUEST),
+    BOOK_NOT_FOUND(1013,"Book not found",HttpStatus.NOT_FOUND),
+    LOAN_NOT_FOUND(1014,"Loan not found",HttpStatus.NOT_FOUND),
+    NOT_ENOUGH_COPY_BOOKS(1015,"Not enough copies",HttpStatus.BAD_REQUEST),
+    BOOK_ALREADY_RETURNED(1016,"Book already returned",HttpStatus.BAD_REQUEST),;
+
     private int code;
     private String message;
     private HttpStatusCode httpStatusCode;

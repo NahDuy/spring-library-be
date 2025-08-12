@@ -1,36 +1,35 @@
 package com.nad.start_spring.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
-@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class User {
+@Entity
+public class Loan {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-     String id;
-     String name;
-     String email;
-     String username;
-     String password;
-     String address;
-     Date joinDate;
+    String loanId;
 
-    @OneToMany(mappedBy = "user")
-    List<Loan> loans;
 
-    @OneToMany(mappedBy = "user")
-    List<Reservation> reservations;
+    LocalDate startDate;
+    LocalDate returnDate;
+    @ManyToOne
+    @JoinColumn(name = "userId")
+    User user;
+    @Column(name = "status")
+    private String status;
+
+    @OneToMany(mappedBy = "loan", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<LoanDetail> loanDetails;
+
 
 }

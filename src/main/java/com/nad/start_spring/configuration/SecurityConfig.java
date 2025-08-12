@@ -1,6 +1,6 @@
 package com.nad.start_spring.configuration;
 
-import com.nad.start_spring.enums.Role;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -12,14 +12,12 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
-
-import javax.crypto.spec.SecretKeySpec;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -27,7 +25,7 @@ import javax.crypto.spec.SecretKeySpec;
 public class SecurityConfig {
 
     private final String[] PUBLIC_ENDPOINTS = {"/users",
-            "/auth/token", "/auth/introspect", "auth/logout", "/auth/refresh",
+            "/auth/token", "/auth/introspect", "auth/logout", "/auth/refresh","/auth/forgot-password","/auth/reset-password",
     };
 
     @Value("${jwt.signerKey}")
@@ -37,21 +35,47 @@ public class SecurityConfig {
     private CustomJwtDecoder customJwtDecoder;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.authorizeHttpRequests(request ->
-                request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
-                        .anyRequest().authenticated());
+    public CorsFilter corsFilter(){
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
 
-        httpSecurity.oauth2ResourceServer(oauth2 ->
-                oauth2.jwt(jwtConfigurer ->
-                        jwtConfigurer.decoder(customJwtDecoder)
-                                .jwtAuthenticationConverter(jwtAuthenticationConverter()))
-                        .authenticationEntryPoint(new JwtAuthenticationEntry())
-        );
-        httpSecurity.csrf(AbstractHttpConfigurer::disable);
+        corsConfiguration.addAllowedOrigin("*");
+        corsConfiguration.addAllowedMethod("*");
+        corsConfiguration.addAllowedHeader("*");
 
-        return httpSecurity.build();
+        UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
+        urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
+
+        return new CorsFilter(urlBasedCorsConfigurationSource);
     }
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                .cors(cors -> {}) // bật CORS, không cần .and()
+                .csrf(AbstractHttpConfigurer::disable)
+//                .authorizeHttpRequests(auth -> auth
+//                        .anyRequest().permitAll()
+//                );
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/users/**").permitAll()
+                        .requestMatchers("/auth/**").permitAll()
+//                        .requestMatchers("/books/**").permitAll()
+//                        .requestMatchers("/category/**").permitAll()
+//                        .requestMatchers("/loans/**").permitAll()
+//                        .requestMatchers("/loan-details/**").permitAll()
+//                        .requestMatchers("/fine/**").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        .jwt(jwt -> jwt
+                                .decoder(customJwtDecoder)
+//                                .jwtAuthenticationConverter(jwtAuthenticationConverter())
+                        )
+                        .authenticationEntryPoint(new JwtAuthenticationEntry())
+                );
+
+        return http.build();
+    }
+
 
     @Bean
     JwtAuthenticationConverter jwtAuthenticationConverter(){
