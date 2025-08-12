@@ -1,6 +1,7 @@
 package com.nad.start_spring.controller;
 
 import com.nad.start_spring.dto.request.*;
+import com.nad.start_spring.dto.response.ApiResponse;
 import com.nad.start_spring.dto.response.AuthenticationResponse;
 import com.nad.start_spring.dto.response.EmailResponse;
 import com.nad.start_spring.dto.response.IntrospectResponse;
@@ -10,6 +11,7 @@ import com.nad.start_spring.exception.ErrorCode;
 import com.nad.start_spring.repository.UserRepository;
 import com.nad.start_spring.service.AuthenticationService;
 import com.nad.start_spring.service.EmailService;
+import com.nad.start_spring.service.util.VerificationCodeStore;
 import com.nimbusds.jose.JOSEException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +19,6 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import com.nad.start_spring.store.VerificationCodeStore;
 import java.text.ParseException;
 
 

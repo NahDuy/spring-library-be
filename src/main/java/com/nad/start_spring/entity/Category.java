@@ -1,19 +1,23 @@
 package com.nad.start_spring.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.util.List;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 public class Category {
     @Id
-    private String categoryId;
-
-    private String name;
-    private String description;
-
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String categoryId;
+    String name;
+    String description;
     @OneToMany(mappedBy = "category")
-    private List<Book> books;
+    List<Book> books;
 }

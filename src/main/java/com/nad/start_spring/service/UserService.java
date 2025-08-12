@@ -37,7 +37,9 @@ public class UserService {
         u.setPassword(passwordEncoder.encode(user.getPassword()));
         return userMapper.toUserResponse(userRepository.save(u));
     }
-
+    public User getUserEntityById(String userId) {
+        return userRepository.findById(userId).orElse(null);
+    }
 
     public List<UserResponse> getAllUsers() {
         log.info("In method getAllUsers");

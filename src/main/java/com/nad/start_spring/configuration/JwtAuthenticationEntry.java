@@ -1,7 +1,7 @@
 package com.nad.start_spring.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nad.start_spring.dto.request.ApiResponse;
+import com.nad.start_spring.dto.response.ApiResponse;
 import com.nad.start_spring.exception.ErrorCode;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

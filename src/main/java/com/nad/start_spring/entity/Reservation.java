@@ -1,25 +1,30 @@
 package com.nad.start_spring.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.util.Date;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 public class Reservation {
     @Id
-    private String reservationId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String reservationId;
 
-    private Date reservationDate;
-    private String status;
+    Date reservationDate;
+    String status;
 
     @ManyToOne
     @JoinColumn(name = "userId")
-    private User user;
+    User user;
 
     @ManyToOne
     @JoinColumn(name = "bookId")
-    private Book book;
+    Book book;
 }

@@ -52,14 +52,23 @@ public class SecurityConfig {
         http
                 .cors(cors -> {}) // bật CORS, không cần .and()
                 .csrf(AbstractHttpConfigurer::disable)
+//                .authorizeHttpRequests(auth -> auth
+//                        .anyRequest().permitAll()
+//                );
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
+                        .requestMatchers("/users/**").permitAll()
+                        .requestMatchers("/auth/**").permitAll()
+//                        .requestMatchers("/books/**").permitAll()
+//                        .requestMatchers("/category/**").permitAll()
+//                        .requestMatchers("/loans/**").permitAll()
+//                        .requestMatchers("/loan-details/**").permitAll()
+//                        .requestMatchers("/fine/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt
                                 .decoder(customJwtDecoder)
-                                .jwtAuthenticationConverter(jwtAuthenticationConverter())
+//                                .jwtAuthenticationConverter(jwtAuthenticationConverter())
                         )
                         .authenticationEntryPoint(new JwtAuthenticationEntry())
                 );

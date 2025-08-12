@@ -1,6 +1,6 @@
-package com.nad.start_spring.entity;
+package com.nad.start_spring.dto.response;
 
-import jakarta.persistence.*;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -12,21 +12,13 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Entity
-public class LoanDetail {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+public class LoanDetailResponse {
     String loanDetailId;
-    int extendedCount;
     LocalDate dueDate;
+    int extendedCount;
     LocalDate returnDate;
     String status;
+    String loanId;
+    String bookId;
     int quantity;
-    @ManyToOne
-    @JoinColumn(name = "loanId")
-    Loan loan;
-
-    @ManyToOne
-    @JoinColumn(name = "bookId")
-    Book book;
 }

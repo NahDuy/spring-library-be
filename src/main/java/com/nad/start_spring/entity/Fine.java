@@ -1,22 +1,33 @@
 package com.nad.start_spring.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Fine {
+
     @Id
-    private String fineId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String fineId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "loan_id")
+    Loan loan;
 
-    private double amount;
-    private boolean paid;
-    private Date paidDate;
-
-    @ManyToOne
-    @JoinColumn(name = "loanId")
-    private Loan loan;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "loan_detail_id")
+    LoanDetail loanDetail;
+    Double amount;
+    @Column(length = 255)
+    String reason;
+    String status;  // PENDING, PAID
+    LocalDate createdDate;
+    LocalDate paidDate;
 }

@@ -1,6 +1,6 @@
 package com.nad.start_spring.controller;
 
-import com.nad.start_spring.dto.request.ApiResponse;
+import com.nad.start_spring.dto.response.ApiResponse;
 import com.nad.start_spring.dto.request.UserCreateRequest;
 import com.nad.start_spring.dto.request.UserUpdateRequest;
 import com.nad.start_spring.dto.response.UserResponse;
