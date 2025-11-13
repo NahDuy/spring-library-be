@@ -24,7 +24,7 @@ public class FineController {
     FineRepository fineRepository;
     FineMapper fineMapper;
     FineService fineService;
-    @GetMapping("/user/{userId}/fines")
+    @GetMapping("/{userId}")
     public ApiResponse<List<FineResponse>> getUserFines(@PathVariable String userId) {
         List<FineResponse> fines = fineRepository.findByLoanDetail_Loan_User_Id(userId)
                 .stream()
