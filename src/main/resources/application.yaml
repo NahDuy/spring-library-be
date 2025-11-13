@@ -27,3 +27,13 @@ jwt:
   signerKey: "qNgTMRm3ljcHlDua2vu4x/ydt+TrH+9e/YqR7z9vRB/yCkprX/UfQuOVCiIGNFwE"
   valid-duration: 3600
   refreshable-duration: 36000
+
+payment:
+  vnPay:
+    url: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+    tmnCode: 4CGC8HI1
+    secretKey: FF7ID9KXB5IV6O5X4UA47ELTMCB1T5CO
+    returnUrl: http://localhost:8080/spring/payment/vn-pay-callback
+    version: 2.1.0
+    command: pay
+    orderType: other

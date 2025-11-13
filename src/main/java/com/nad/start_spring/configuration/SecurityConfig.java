@@ -58,11 +58,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/users/**").permitAll()
                         .requestMatchers("/auth/**").permitAll()
-//                        .requestMatchers("/books/**").permitAll()
-//                        .requestMatchers("/category/**").permitAll()
-//                        .requestMatchers("/loans/**").permitAll()
-//                        .requestMatchers("/loan-details/**").permitAll()
-//                        .requestMatchers("/fine/**").permitAll()
+                        .requestMatchers("/books/**").permitAll()
+                        .requestMatchers("/category/**").permitAll()
+                        .requestMatchers("/loans/**").permitAll()
+                        .requestMatchers("/loan-details/**").permitAll()
+                        .requestMatchers("/fine/**").permitAll()
+                        .requestMatchers("/payment/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
