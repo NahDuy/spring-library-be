@@ -17,7 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.HashSet;
 
 @Configuration
-@RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@RequiredArgsConstructor(onConstructor_ = { @Autowired })
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ApplicationInitConfig {
 
@@ -25,18 +25,18 @@ public class ApplicationInitConfig {
     private PasswordEncoder passwordEncoder;
 
     @Bean
-    @ConditionalOnProperty(
-            prefix = "spring",
-            value = "datasource.driverClassName",
-            havingValue = "com.mysql.cj.jdbc.Driver"
-    )
+    @ConditionalOnProperty(prefix = "spring", value = "datasource.driverClassName", havingValue = "com.mysql.cj.jdbc.Driver")
     ApplicationRunner applicationRunner(UserRepository userRepository) {
         return args -> {
-            if(userRepository.findByUsername("admin").isEmpty()){
+            if (userRepository.findByUsername("admin").isEmpty()) {
+                HashSet<String> roles = new HashSet<>();
+                roles.add("ADMIN");
+                roles.add("USER");
                 User user = User
                         .builder()
                         .username("admin")
                         .password(passwordEncoder.encode("admin"))
+                        .roles(roles)
                         .build();
                 userRepository.save(user);
                 log.warn("admin user has been created with default password: admin, please change it");

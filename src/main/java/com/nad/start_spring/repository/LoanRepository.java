@@ -10,6 +10,10 @@ import java.util.Optional;
 
 public interface LoanRepository extends JpaRepository<Loan, String> {
     Optional<Loan> findByUser_IdAndStatus(String userId, String status);
+
     List<Loan> findByUser_IdAndStatusIn(String id, List<String> statuses);
+
     Optional<Loan> findByUserAndStatus(User user, String status);
+
+    List<Loan> findByStatus(String status);
 }

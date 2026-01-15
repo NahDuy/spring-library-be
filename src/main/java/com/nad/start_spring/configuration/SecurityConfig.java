@@ -1,6 +1,5 @@
 package com.nad.start_spring.configuration;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -24,8 +23,9 @@ import org.springframework.web.filter.CorsFilter;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private final String[] PUBLIC_ENDPOINTS = {"/users",
-            "/auth/token", "/auth/introspect", "auth/logout", "/auth/refresh","/auth/forgot-password","/auth/reset-password",
+    private final String[] PUBLIC_ENDPOINTS = { "/users",
+            "/auth/token", "/auth/introspect", "auth/logout", "/auth/refresh", "/auth/forgot-password",
+            "/auth/reset-password",
     };
 
     @Value("${jwt.signerKey}")
@@ -35,7 +35,7 @@ public class SecurityConfig {
     private CustomJwtDecoder customJwtDecoder;
 
     @Bean
-    public CorsFilter corsFilter(){
+    public CorsFilter corsFilter() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
 
         corsConfiguration.addAllowedOrigin("*");
@@ -47,40 +47,60 @@ public class SecurityConfig {
 
         return new CorsFilter(urlBasedCorsConfigurationSource);
     }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> {}) // bật CORS, không cần .and()
+                .cors(cors -> {
+                }) // bật CORS, không cần .and()
                 .csrf(AbstractHttpConfigurer::disable)
-//                .authorizeHttpRequests(auth -> auth
-//                        .anyRequest().permitAll()
-//                );
+                // .authorizeHttpRequests(auth -> auth
+                // .anyRequest().permitAll()
+                // );
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
-                        .requestMatchers("/users/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/users").permitAll() // Register
+                        .requestMatchers("/users/myInfo").authenticated() // Login user info
+                        .requestMatchers("/users/**").hasAuthority("ADMIN") // Other user operations
+
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/books/**").permitAll()
-                        .requestMatchers("/category/**").permitAll()
-                        .requestMatchers("/loans/**").permitAll()
+
+                        .requestMatchers(HttpMethod.GET, "/books/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/books/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/books/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/books/**").hasAuthority("ADMIN")
+
+                        .requestMatchers(HttpMethod.GET, "/categories/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/category/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/category/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/category/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/category/**").hasAuthority("ADMIN")
+
+                        .requestMatchers(HttpMethod.GET, "/loans/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/loans/**").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/loans/**").hasAuthority("ADMIN")
                         .requestMatchers("/loan-details/**").permitAll()
-                        .requestMatchers("/fine/**").permitAll()
+
+                        .requestMatchers(HttpMethod.GET, "/fine/**").authenticated() // Allow any authenticated user to
+                                                                                     // view fines
+                        .requestMatchers(HttpMethod.POST, "/fine/**").hasAuthority("ADMIN") // Only ADMIN
+                        .requestMatchers(HttpMethod.PUT, "/fine/**").hasAuthority("ADMIN") // Only ADMIN
+
                         .requestMatchers("/payment/**").permitAll()
-                        .anyRequest().authenticated()
-                )
+                        .requestMatchers("/api/notifications/**").permitAll()
+                        .requestMatchers("/favorites/**").authenticated() // User must be logged in
+                        .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt
                                 .decoder(customJwtDecoder)
-                                .jwtAuthenticationConverter(jwtAuthenticationConverter())
-                        )
-                        .authenticationEntryPoint(new JwtAuthenticationEntry())
-                );
+                                .jwtAuthenticationConverter(jwtAuthenticationConverter()))
+                        .authenticationEntryPoint(new JwtAuthenticationEntry()));
 
         return http.build();
     }
 
-
     @Bean
-    JwtAuthenticationConverter jwtAuthenticationConverter(){
+    JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
         jwtGrantedAuthoritiesConverter.setAuthorityPrefix("");
 
@@ -90,9 +110,8 @@ public class SecurityConfig {
         return jwtAuthenticationConverter;
     }
 
-
     @Bean
-    PasswordEncoder passwordEncoder(){
+    PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(10);
     }
 }

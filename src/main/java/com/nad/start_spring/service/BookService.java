@@ -10,6 +10,8 @@ import com.nad.start_spring.repository.CategoryRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,10 +25,12 @@ public class BookService {
     BookRepository bookRepository;
     CategoryRepository categoryRepository;
     BookMapper bookMapper;
+
     public List<BookResponse> getAllBooks() {
         return bookRepository.findAll().stream()
                 .map(bookMapper::toBookResponse).toList();
     }
+
     public List<BookResponse> getBooksByCategory(String categoryId) {
         return bookRepository.findByCategory_CategoryId(categoryId)
                 .stream()
@@ -41,6 +45,7 @@ public class BookService {
         book.setCategory(category);
         return bookMapper.toBookResponse(bookRepository.save(book));
     }
+
     public Book getBookById(String bookId) {
         Optional<Book> book = bookRepository.findById(bookId);
         return book.orElse(null);
@@ -61,6 +66,7 @@ public class BookService {
                 .map(bookMapper::toBookResponse)
                 .orElseThrow(() -> new RuntimeException("Book not found"));
     }
+
     public List<BookResponse> searchBooks(String query) {
         List<Book> books;
         if (query == null || query.trim().isEmpty()) {
@@ -73,5 +79,20 @@ public class BookService {
 
     public void deleteBook(String id) {
         bookRepository.deleteById(id);
+    }
+
+    public List<BookResponse> getPopularBooks(int limit) {
+        Pageable pageable = PageRequest.of(0, limit);
+        return bookRepository.findMostBorrowedBooks(pageable).stream()
+                .map(bookMapper::toBookResponse)
+                .toList();
+    }
+
+    public List<BookResponse> getRelatedBooks(String bookId) {
+        Book book = bookRepository.findById(bookId).orElseThrow(() -> new RuntimeException("Book not found"));
+        return bookRepository.findTop5ByCategory_CategoryIdAndBookIDNot(book.getCategory().getCategoryId(), bookId)
+                .stream()
+                .map(bookMapper::toBookResponse)
+                .toList();
     }
 }

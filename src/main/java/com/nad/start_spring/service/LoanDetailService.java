@@ -16,6 +16,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.ObjectProvider;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -31,7 +32,7 @@ public class LoanDetailService {
     LoanRepository loanRepository;
     BookRepository bookRepository;
     LoanDetailMapper mapper;
-    FineService fineService;
+    ObjectProvider<FineService> fineServiceProvider;
     LoanService loanService;
     BookService bookService;
 
@@ -99,7 +100,7 @@ public class LoanDetailService {
         loanDetail.setStatus(String.valueOf(LoanDetailStatus.RETURNED));
         loanDetailRepository.save(loanDetail);
 
-        fineService.calculateFine(loanDetailId);
+        fineServiceProvider.getObject().calculateFine(loanDetailId);
 
         return mapper.toResponse(loanDetail);
     }
@@ -134,5 +135,11 @@ public class LoanDetailService {
         return loanDetailRepository.save(detail);
     }
 
+    public List<LoanDetail> findByDueDate(LocalDate dueDate) {
+        return loanDetailRepository.findByDueDate(dueDate);
+    }
 
+    public List<LoanDetail> findOverdueLoans() {
+        return loanDetailRepository.findByDueDateBeforeAndReturnDateIsNull(LocalDate.now());
+    }
 }

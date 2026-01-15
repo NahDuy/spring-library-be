@@ -23,6 +23,9 @@ spring:
           auth: true
           starttls:
             enable: true
+  scheduling:
+    thread-pool:
+      size: 1
 jwt:
   signerKey: "qNgTMRm3ljcHlDua2vu4x/ydt+TrH+9e/YqR7z9vRB/yCkprX/UfQuOVCiIGNFwE"
   valid-duration: 3600

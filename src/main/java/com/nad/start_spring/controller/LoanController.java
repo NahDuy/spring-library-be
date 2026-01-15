@@ -25,6 +25,7 @@ public class LoanController {
     LoanService loanService;
     LoanMapper loanMapper;
     UserService userService;
+
     @PostMapping
     public ApiResponse<LoanResponse> createLoan(@RequestBody LoanRequest request) {
         return ApiResponse.<LoanResponse>builder()
@@ -45,6 +46,7 @@ public class LoanController {
                 .status(loanMapper.toResponse(loan))
                 .build();
     }
+
     @PutMapping("/{loanId}/status")
     public ApiResponse<LoanResponse> updateLoanStatus(
             @PathVariable String loanId,
@@ -72,7 +74,6 @@ public class LoanController {
                 .build();
     }
 
-
     @PutMapping("/{loanId}/check-completion")
     public ApiResponse<LoanResponse> checkAndCompleteLoan(@PathVariable String loanId) {
         Loan updatedLoan = loanService.checkAndCompleteLoan(loanId);
@@ -82,7 +83,6 @@ public class LoanController {
                 .status(loanMapper.toResponse(updatedLoan))
                 .build();
     }
-
 
     @GetMapping("/{id}")
     public ApiResponse<LoanResponse> getLoanByUserId(@PathVariable String id) {
@@ -95,7 +95,14 @@ public class LoanController {
     public ApiResponse<String> deleteLoan(@PathVariable String id) {
         loanService.deleteLoan(id);
         return ApiResponse.<String>builder()
-                .status("Loan deleted successfully")
+                .message("Loan deleted successfully")
+                .build();
+    }
+
+    @GetMapping
+    public ApiResponse<List<LoanResponse>> getAllLoans(@RequestParam(required = false) String status) {
+        return ApiResponse.<List<LoanResponse>>builder()
+                .status(loanService.getAllLoans(status))
                 .build();
     }
 }

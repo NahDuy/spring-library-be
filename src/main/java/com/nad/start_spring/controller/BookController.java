@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/books")
-@RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@RequiredArgsConstructor(onConstructor_ = { @Autowired })
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class BookController {
     BookService bookService;
@@ -30,6 +30,7 @@ public class BookController {
     ApiResponse<List<BookResponse>> getBooksCategory(@PathVariable("categoryId") String categoryId) {
         return ApiResponse.<List<BookResponse>>builder().status(bookService.getBooksByCategory(categoryId)).build();
     }
+
     @GetMapping("/related/{categoryId}")
     public ApiResponse<List<BookResponse>> getRelatedBooks(@PathVariable("categoryId") String categoryId) {
         List<BookResponse> books = bookService.getBooksByCategory(categoryId);
@@ -45,16 +46,30 @@ public class BookController {
         return ApiResponse.<List<BookResponse>>builder().status(result).build();
     }
 
+    @GetMapping("/popular")
+    public ApiResponse<List<BookResponse>> getPopularBooks(
+            @RequestParam(value = "limit", defaultValue = "10") int limit) {
+        return ApiResponse.<List<BookResponse>>builder()
+                .status(bookService.getPopularBooks(limit))
+                .build();
+    }
+
+    @GetMapping("/suggestions/{bookId}")
+    public ApiResponse<List<BookResponse>> getSuggestions(@PathVariable("bookId") String bookId) {
+        return ApiResponse.<List<BookResponse>>builder()
+                .status(bookService.getRelatedBooks(bookId))
+                .build();
+    }
 
     @GetMapping("/{id}")
     ApiResponse<BookResponse> getBook(@PathVariable("id") String id) {
         return ApiResponse.<BookResponse>builder().status(bookService.getBook(id)).build();
     }
+
     @GetMapping("entity/{id}")
     ApiResponse<Book> getEtityBook(@PathVariable("id") String id) {
         return ApiResponse.<Book>builder().status(bookService.getBookById(id)).build();
     }
-
 
     @PostMapping
     ApiResponse<BookResponse> createBook(@RequestBody BookRequest request) {

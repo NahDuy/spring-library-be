@@ -10,7 +10,6 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.Set;
 
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,14 +18,12 @@ import java.util.Set;
 public class UserResponse {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-     String id;
+    String id;
     String name;
     String email;
     String username;
     String address;
     Date joinDate;
-
-
-
+    Set<String> roles;
 
 }

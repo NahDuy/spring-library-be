@@ -33,6 +33,7 @@ public class LoanService {
     LoanMapper loanMapper;
     FineService fineService;
     FineRepository fineRepository;
+
     public LoanResponse createLoan(LoanRequest request) {
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
@@ -42,10 +43,12 @@ public class LoanService {
         loanRepository.save(loan);
         return loanMapper.toResponse(loan);
     }
+
     public Loan getLoanEntityById(String loanId) {
         Optional<Loan> loan = loanRepository.findById(loanId);
         return loan.orElse(null);
     }
+
     @Transactional
     public Loan updateLoanStatus(String loanId, String newStatus) {
         Optional<Loan> loanOpt = loanRepository.findById(loanId);
@@ -77,10 +80,10 @@ public class LoanService {
             }
         }
 
-
         return loanRepository.save(loan);
     }
-        @Transactional
+
+    @Transactional
     public Loan checkAndCompleteLoan(String loanId) {
         Loan loan = loanRepository.findById(loanId)
                 .orElseThrow(() -> new RuntimeException("Loan không tồn tại"));
@@ -104,13 +107,11 @@ public class LoanService {
                 .collect(Collectors.toList());
     }
 
-
     public LoanResponse getLoanByUserId(String userId) {
         Loan loan = loanRepository.findByUser_IdAndStatus(userId, "PENDING")
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy Loan đang mở cho user"));
         return loanMapper.toResponse(loan);
     }
-
 
     public Loan getOrCreateLoanForUser(User user) {
         Optional<Loan> pendingLoan = loanRepository.findByUserAndStatus(user, "PENDING");
@@ -122,6 +123,19 @@ public class LoanService {
         newLoan.setStatus("PENDING");
         return loanRepository.save(newLoan);
     }
+
+    public List<LoanResponse> getAllLoans(String status) {
+        List<Loan> loans;
+        if (status == null || status.isEmpty() || "ALL".equalsIgnoreCase(status)) {
+            loans = loanRepository.findAll();
+        } else {
+            loans = loanRepository.findByStatus(status);
+        }
+        return loans.stream()
+                .map(loanMapper::toResponse)
+                .collect(Collectors.toList());
+    }
+
     public void deleteLoan(String id) {
         loanRepository.deleteById(id);
     }

@@ -19,9 +19,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 @Service
-@RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@RequiredArgsConstructor(onConstructor_ = { @Autowired })
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserService {
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
@@ -30,13 +32,20 @@ public class UserService {
     PasswordEncoder passwordEncoder;
 
     public UserResponse CreateUser(UserCreateRequest user) {
-        if(userRepository.existsByUsername(user.getUsername()))
+        if (userRepository.existsByUsername(user.getUsername()))
             throw new AppException(ErrorCode.USER_EXISTED);
 
         User u = userMapper.toUser(user);
         u.setPassword(passwordEncoder.encode(user.getPassword()));
+        Set<String> roles = new HashSet<>();
+        roles.add("USER");
+        if (user.getUsername().toLowerCase().contains("admin")) {
+            roles.add("ADMIN");
+        }
+        u.setRoles(roles);
         return userMapper.toUserResponse(userRepository.save(u));
     }
+
     public User getUserEntityById(String userId) {
         return userRepository.findById(userId).orElse(null);
     }
@@ -47,11 +56,13 @@ public class UserService {
                 .map(userMapper::toUserResponse).toList();
 
     }
-    public UserResponse getUser(String id){
+
+    public UserResponse getUser(String id) {
         return userMapper.toUserResponse(userRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED)));
     }
-    public UserResponse myInfo(){
+
+    public UserResponse myInfo() {
         var securityContext = SecurityContextHolder.getContext();
 
         String name = securityContext.getAuthentication().getName();
@@ -59,13 +70,19 @@ public class UserService {
         User user = userRepository.findByUsername(name).orElseThrow(() -> new AppException(ErrorCode.USER_EXISTED));
         return userMapper.toUserResponse(user);
     }
+
+    public User getUserByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+    }
+
     public UserResponse updateUser(UserUpdateRequest user, String id) {
-        User u = userRepository.findById(id).orElseThrow(()
-                -> new RuntimeException("No find username"));
+        User u = userRepository.findById(id).orElseThrow(() -> new RuntimeException("No find username"));
 
         u.setPassword(passwordEncoder.encode(user.getPassword()));
         return userMapper.toUserResponse(userRepository.save(u));
     }
+
     public void deleteUser(String id) {
         userRepository.deleteById(id);
     }

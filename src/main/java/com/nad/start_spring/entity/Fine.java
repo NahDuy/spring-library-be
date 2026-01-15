@@ -17,6 +17,11 @@ public class Fine {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String fineId;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    User user;
+    
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "loan_id")
     Loan loan;
@@ -30,4 +35,5 @@ public class Fine {
     String status;  // PENDING, PAID
     LocalDate createdDate;
     LocalDate paidDate;
+    LocalDate dueDate;
 }

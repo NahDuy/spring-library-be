@@ -14,6 +14,7 @@ import java.util.List;
 public class LoanResponse {
      String loanId;
      String userId;
+     UserResponse user;
      String status;
      LocalDate startDate;
      LocalDate returnDate;
